@@ -1,0 +1,6 @@
+@BiblioSol.SPA.Web.Server_HostAddress = http://localhost:5145
+
+GET {{BiblioSol.SPA.Web.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
