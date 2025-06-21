@@ -91,14 +91,76 @@ namespace BiblioSol.Application.Services.insurance
             return operationResult;
         }
 
-        public Task<OperationResult> GetNetworkTypeByIdAsync(int id)
+        public async Task<OperationResult> GetNetworkTypeByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            OperationResult operationResult = new OperationResult();
+
+            try
+            {
+                _logger.LogInformation("Retrieving network type with ID: {NetworkTypeId}", id);
+                if (id <= 0)
+                {
+                    operationResult = OperationResult.Failure(_configuration["Error:ErrorNetworkTypeIdInvalid"]);
+                    return operationResult;
+                }
+                var result = await _networkTypeRepository.GetByIdAsync(id);
+                if (result.IsSuccess)
+                {
+                    operationResult = OperationResult.Success("Network type retrieved successfully.", result.Data);
+                }
+                else
+                {
+                    operationResult = OperationResult.Failure("Failed to retrieve network type.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving network type with ID: {NetworkTypeId}", id);
+                operationResult = OperationResult.Failure("An error occurred while retrieving the network type.");
+            }
+            return operationResult;
         }
 
-        public Task<OperationResult> UpdateNetworkTypeAsync(NetworkTypeUpdateDto networkTypeUpdateDto)
+        public async Task<OperationResult> UpdateNetworkTypeAsync(NetworkTypeUpdateDto networkTypeUpdateDto)
         {
-            throw new NotImplementedException();
+            OperationResult operationResult = new OperationResult();
+
+            try
+            {
+                // las validaciones de negocio se deben hacer a esta funcionalidad//
+
+                _logger.LogInformation("Updating network type with ID: {NetworkTypeId}", networkTypeUpdateDto.Id);
+
+
+                if (networkTypeUpdateDto is null)
+                {
+                    operationResult = OperationResult.Failure(_configuration["Error:ErrorNetworkTypeIsNull"]);
+                    return operationResult;
+                }
+
+                operationResult = await _networkTypeRepository.UpdateAsync(networkTypeUpdateDto.ToDomainEntityUpdate());
+
+                if (operationResult.IsSuccess)
+                {
+                    _logger.LogInformation("Network type with ID {NetworkTypeId} updated successfully.", networkTypeUpdateDto.Id);
+                    operationResult = OperationResult.Success("Network type updated successfully.", operationResult.Data);
+                }
+                else
+                {
+                    _logger.LogError("Failed to update network type with ID {NetworkTypeId}.", networkTypeUpdateDto.Id);
+                    operationResult = OperationResult.Failure("An error occurred while updating the network type.");
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "An error occurred while updating the network type with ID {NetworkTypeId}.",
+                                networkTypeUpdateDto.Id);
+                operationResult = OperationResult.Failure("An error occurred while updating the network type.");
+            }
+            return operationResult;
         }
     }
 }

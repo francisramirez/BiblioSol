@@ -33,9 +33,16 @@ namespace BiblioSol.Api.Controllers
 
         // GET api/<NetworkTypeController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            var result = await _networkTypeService.GetNetworkTypeByIdAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
 
         // POST api/<NetworkTypeController>
@@ -53,15 +60,18 @@ namespace BiblioSol.Api.Controllers
         }
 
         // PUT api/<NetworkTypeController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPost("ModifyNetworkType")]
+        public async Task<IActionResult> Put([FromBody] NetworkTypeUpdateDto networkTypeUpdateDto)
         {
-        }
+            var result = await _networkTypeService.UpdateNetworkTypeAsync(networkTypeUpdateDto);
 
-        // DELETE api/<NetworkTypeController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
+      
     }
 }
