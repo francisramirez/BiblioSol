@@ -19,7 +19,6 @@ namespace BiblioSol.Api
 
             builder.Services.AddScoped<INetworkTypeRepository, NetworkTypeRepository>();
 
-
             builder.Services.AddTransient<INetworkTypeService, NetworkTypeService>();
 
             builder.Services.AddControllers();

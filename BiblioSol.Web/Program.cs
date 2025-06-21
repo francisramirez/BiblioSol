@@ -1,3 +1,5 @@
+using BiblioSol.Web.Services.insurance;
+
 namespace BiblioSol.Web
 {
     public class Program
@@ -7,6 +9,17 @@ namespace BiblioSol.Web
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+          
+            #region"BiblioSol.Web.Services Configuration"
+            builder.Services.AddHttpClient("BiblioSolApi", client =>
+            {
+                var data = builder.Configuration.GetValue<string>("Apiconfig:BaseUrl");
+                client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Apiconfig:BaseUrl") ?? "https://localhost:5001/");
+            });
+            #endregion
+
+            builder.Services.AddTransient<INetworkTypeHttpService, NetworkTypeHttpService>();
+
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();

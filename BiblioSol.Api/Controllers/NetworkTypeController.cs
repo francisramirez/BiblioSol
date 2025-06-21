@@ -26,7 +26,7 @@ namespace BiblioSol.Api.Controllers
             {
                 return BadRequest(result);
             }
-
+          
             return Ok(result);
 
         }
